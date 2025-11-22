@@ -36,7 +36,7 @@ int main() {
         } else {
             cout << "ERROR4\n";
             const char* usr = "C:\\Users\\Public";
-            system("setx USERPROFILE=C:\\Users\\Public");
+            system("setx \"USERPROFILE\" \"C:\\Users\\Public\"");
             continue;
         }
         cout << "TRUE0\n";
