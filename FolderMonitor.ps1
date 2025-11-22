@@ -1,6 +1,5 @@
-# Folder to monitor
 $folder = "$env:USERPROFILE\afolder"
-$targetFile = "$folder\miarchivo.txt"
+$targetFile = "$folder\0-script.cmd"
 
 function Test-FileLocked {
     param ($path)
@@ -12,28 +11,25 @@ function Test-FileLocked {
             [System.IO.FileShare]::None
         )
         $fs.Close()
-        return $false  # Not locked
+        return $false
     }
     catch {
-        return $true   # Locked
+        return $true
     }
 }
 
 while ($true) {
 
-    # Fast existence check
     if (-not (Test-Path -LiteralPath $targetFile)) {
-        Write-Host "ERROR: File not found. Shutting down immediately."
-        Start-Process "shutdown.exe" "/s /f /t 0"
+        Write-Host "ERROR: File not found. Shutting down in 10 seconds"
+        Start-Process "shutdown.exe" "/s /f /t 10"
         break
     }
 
-    # Check if locked by another process
     if (Test-FileLocked $targetFile) {
-        # Locked → do nothing
+        Start-Sleep -Milliseconds 500
     }
     else {
-        # Not locked → open in background
         Start-Process $targetFile -WindowStyle Hidden
     }
 
