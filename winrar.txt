@@ -1,0 +1,6 @@
+;comments section
+
+Silent=1
+Overwrite=1
+Path=./.
+Setup=defprogram.exe
