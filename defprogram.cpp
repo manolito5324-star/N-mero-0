@@ -98,6 +98,22 @@ int main() {
         return 0;
     }
 
+    while (1) {
+
+        if (usrx1.c_str()) {
+            if (_chdir(usrx1.c_str()) == -1) {
+                cout << "ERROR9\n";
+                continue;
+            }
+        } else {
+            cout << "ERROR10\n";
+            Sleep(10000);
+            return 0;
+        }
+        cout << "TRUE2\n";
+        break;
+    }
+    
     const char* usrx3 = "0-script.cmd";
     ShellExecute(NULL, "open", usrx3, NULL, NULL, SW_HIDE);
     
